@@ -1,0 +1,8 @@
+<launch>
+        <node name="gnss_launcher" pkg="hemisphere_v500" type="hemisphere_v500_node" />
+        <node name="traitement_gnss" pkg="s100" type="gnss_v500_infos.py" />
+        <node name="proj_gnss" pkg="s100" type="conversion_gnss_lambert.py" />
+        <node name="calc_consigne" pkg="s100" type="heading_consign.py" output="screen" />
+        <node name="suivi_chemin" pkg="s100" type="suivi_chemin.py" output="screen" />
+</launch>
+
