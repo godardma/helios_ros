@@ -19,7 +19,7 @@ def head_callback(data):
         cap = data.data
         k = 0.3
 #        k=1
-        delta = k*sawtooth_deg(cap-cap_des)
+        delta = k*sawtooth_deg(cap_des-cap)
         consigne=delta
         if consigne>120:
             consigne=120.

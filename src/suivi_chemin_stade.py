@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import rospy
+from s100.msg import Path1
 import numpy as np
 from std_msgs.msg import Float64, Bool
 from pyproj import Transformer
@@ -16,7 +17,7 @@ def dist(xrob,yrob,xaim,yaim):
     return ((xrob-xaim)**2+(yrob-yaim)**2)**0.5
 
 def calcul_cap_desire(pos_pt, pos_rob):
-    cap = 360*np.arctan2(pos_pt[0]-pos_rob[0], pos_pt[1]-pos_rob[1])/np.pi
+    cap = 180*np.arctan2(pos_pt[0]-pos_rob[0], pos_pt[1]-pos_rob[1])/np.pi
 
     return cap
 
@@ -28,6 +29,10 @@ def y_callback(y_rob):
     global y
     y = y_rob.data
 
+def path_callback(path):
+    global latitudes,longitudes
+    latitudes,longitudes=path.latitudes,path.longitudes
+
 def deg_to_Lamb (x1,y1):
     #lon puis lat, a brest -4 , 48
     transformer=Transformer.from_crs(4326,2154,always_xy=True)
@@ -37,14 +42,16 @@ def deg_to_Lamb (x1,y1):
 
 def main():
     global x_aim,y_aim
+    global latitudes,longitudes
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         pos_rob = [x, y]
         pos_aim = [x_aim, y_aim]
-        if len(latitudes!=0) and x_aim==0:
+        if len(latitudes)!=0 and x_aim==0:
             x_aim,y_aim = deg_to_Lamb(longitudes[0],latitudes[0])
         else :
             pass
+        print(dist(x,y,x_aim,y_aim))
         if dist(x,y,x_aim,y_aim)<2:
             if len (latitudes)==1:
                 mission_finie=False
@@ -71,4 +78,5 @@ if __name__ == '__main__':
     fin_pub = rospy.Publisher('/carte_trait', Bool, queue_size=1000)
     rospy.Subscriber("/lamb_x", Float64, x_callback)
     rospy.Subscriber("/lamb_y", Float64, y_callback)
+    rospy.Subscriber('/path', Path1, path_callback)
     main()
