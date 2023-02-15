@@ -14,7 +14,7 @@ def cons_callback(data):
         cons=cons+120
         ser.write(struct.pack('>B', cons))
     else :
-        cons=242
+        cons=248
         ser.write(struct.pack('>B', cons))
 
 
@@ -37,7 +37,7 @@ def main():
     while not rospy.is_shutdown():
         msg = ser.readline()
         msg_str = str(msg)
-        if "Batterie" in msg_str:
+        if  len(msg_str)>6:
             i+=1
             if i%50==0:
                 print(msg_str[2:-5])

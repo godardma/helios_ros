@@ -13,12 +13,14 @@ from pyproj import Transformer
 
 
 def gnss_callback(data):
+    global f
     lat,lon=data.latitude,data.longitude
+    f.write(str(lon)+","+str(lat)+"\n")
     pub_lat.publish(lat)
     pub_lon.publish(lon)
 
 def bin3_callback(data):
-    cap=data.heading-90.
+    cap=data.cog #si heading faire -90
     if cap >180.:
         cap=cap-360.0
     pub_head.publish(cap)
@@ -34,6 +36,9 @@ def main():
 
 if __name__ == '__main__':
     rospy.init_node('trait_gnss', anonymous=True)
+    path="/home/s100/catkin_ws/src/s100/logs/"
+    name="S102_4"
+    f=open(path+name+"_traj.txt","w")
     pub_lat = rospy.Publisher('/lat', Float64, queue_size=1000)
     pub_lon = rospy.Publisher('/lon', Float64, queue_size=1000)
     pub_head = rospy.Publisher('/heading', Float64, queue_size=1000)

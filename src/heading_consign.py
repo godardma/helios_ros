@@ -17,7 +17,7 @@ def aim_callback(data):
 
 def head_callback(data):
         cap = data.data
-        k = 0.3
+        k = 0.8
 #        k=1
         delta = k*sawtooth_deg(cap_des-cap)
         consigne=delta
