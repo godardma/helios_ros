@@ -41,18 +41,19 @@ def deg_to_Lamb (x1,y1):
             return pt
 
 def main():
-    global x_aim,y_aim
+    global x_aim,y_aim,f,x,y
     global latitudes,longitudes
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         pos_rob = [x, y]
         pos_aim = [x_aim, y_aim]
         if len(latitudes)!=0 and x_aim==0:
+            f.write(str(longitudes[0])+","+str(latitudes[0])+"\n")
             x_aim,y_aim = deg_to_Lamb(longitudes[0],latitudes[0])
-        else :
-            pass
+        elif  len(latitudes)==0 and x_aim==0:
+            continue
         print(dist(x,y,x_aim,y_aim))
-        if dist(x,y,x_aim,y_aim)<2:
+        if dist(x,y,x_aim,y_aim)<10:
             if len (latitudes)==1:
                 mission_finie=False
                 fin_pub.publish(mission_finie)
@@ -61,6 +62,7 @@ def main():
                 print("nouveau point")
                 latitudes=latitudes[1:]
                 longitudes=longitudes[1:]
+                f.write(str(longitudes[0])+","+str(latitudes[0])+"\n")
                 x_aim,y_aim = deg_to_Lamb(longitudes[0],latitudes[0])
                 
 
@@ -70,6 +72,9 @@ def main():
 
 if __name__ == '__main__':
     rospy.init_node('point_follow', anonymous = True)
+    path="/home/s100/catkin_ws/src/s100/logs/"
+    name="S102_4"
+    f=open(path+name+"_path.txt","w")
     x = 0
     y = 0
     x_aim,y_aim=0,0

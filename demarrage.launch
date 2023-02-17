@@ -4,6 +4,7 @@
         <node name="proj_gnss" pkg="s100" type="conversion_gnss_lambert.py" />
         <node name="calc_consigne" pkg="s100" type="heading_consign.py" output="screen" />
         <node name="lecture_batterie" pkg="s100" type="batterie_elec.py" output="screen" />
+        <node name="suivi_chemin" pkg="s100" type="suivi_chemin_stade.py" output="screen" />
         <node name="communication_arduino" pkg="s100" type="comm_arduino.py" output="screen" />
 </launch>
 
